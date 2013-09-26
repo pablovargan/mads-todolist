@@ -6,6 +6,7 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
+//Añadir fecha de creación y de edición
 case class Task(id: Long, label: String)
 
 object Task {

@@ -3,10 +3,11 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                       controllers.Application.index
 
 # Tasks
 GET     /tasks                  controllers.Application.tasks
+GET     /newtask                controllers.Application.newTask_page
 POST    /tasks                  controllers.Application.newTask
 POST    /tasks/:id/delete       controllers.Application.deleteTask(id: Long)
 

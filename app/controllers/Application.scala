@@ -14,10 +14,14 @@ object Application extends Controller {
     Redirect(routes.Application.tasks)
   }
 
-  //def tasks = TODO
   def tasks = Action {
     Ok(views.html.index(Task.all(), taskForm))
   }
+
+  def newTask_page = Action {
+    Ok(views.html.newtask(taskForm))
+  }
+  //def newTask_page = TODO
 
   //def newTask = TODO
   def newTask = Action { implicit request =>
@@ -39,6 +43,8 @@ object Application extends Controller {
   val taskForm = Form(
     "label" -> nonEmptyText
   )
+
+
 }
 
   

@@ -1,0 +1,14 @@
+@(taskForm: Form[String])
+@import helper._
+
+@main("Add Task") {
+	<h1> Add a new task </h1>
+	@form(routes.Application.newTask) {
+        
+        @inputText(taskForm("label")) 
+        
+        <input type="submit" value="Create">
+     }
+}
+
+
