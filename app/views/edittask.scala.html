@@ -1,0 +1,13 @@
+@(id: Long, taskForm: Form[Task])
+@import helper._
+
+@main("Edit Task") {
+	<h1> Edit task </h1>
+	@form(routes.Application.update(id)) {
+
+		@inputText(taskForm("label"))
+
+		<input type="submit" value="Save">
+		<a href="@routes.Application.index">Cancel</a>
+	}
+}

@@ -40,5 +40,30 @@ object Task {
       ).executeUpdate()
     }
   }
+
+  //Retrieve a computer from the id
+  def findById(id: Long): Option[Task] = {
+    DB.withConnection { implicit connection =>
+      SQL("select * from task where id = {id}").on('id -> id).as(Task.task.singleOpt)
+    }
+  }
+
+  //Update a task
+  def update(id: Long, task: Task) = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          update task
+          set label = {label}
+          where id = {id}
+        """
+      ).on(
+        'id -> id,
+        'label -> task.label
+      ).executeUpdate()
+    }
+  }
+
 }
+
 

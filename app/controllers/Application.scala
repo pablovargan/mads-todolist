@@ -44,10 +44,27 @@ object Application extends Controller {
 	  )
   }
   //Delete task from bbdd?
-  def deleteTask(id: Long) = Action {
+  def delete(id: Long) = Action {
     Task.delete(id)
     Redirect(routes.Application.tasks)
   }
+  //Edit task and rediret to Taks(index)
+  def edit(id: Long) = Action {
+    Task.findById(id).map { task =>
+      Ok(views.html.edittask(id, taskForm.fill(task)))
+    }.getOrElse(NotFound)
+  }
+  //Update task from bbdd?
+  def update(id: Long) = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.edittask(id, errors)),
+      task => {
+        Task.update(id, task)
+        Redirect(routes.Application.tasks)
+      }
+    )
+  }
+
 }
 
   
