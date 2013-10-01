@@ -6,45 +6,48 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 
+import anorm._
 import models.Task
 
 object Application extends Controller {
   
+  //Describe the task form
+  val taskForm = Form(
+    mapping(
+      "id" -> ignored(NotAssigned:Pk[Long]),
+      "label" -> nonEmptyText
+    ) (Task.apply)(Task.unapply)
+  )
+
+  /* ACTIONS */
+
+  //Redirect to list of tasks (application home)
   def index = Action {
     Redirect(routes.Application.tasks)
   }
-
+  //Display a list of tasks
   def tasks = Action {
-    Ok(views.html.index(Task.all(), taskForm))
+    Ok(views.html.index(Task.all()))
   }
-
-  def newTask_page = Action {
+  //Display form to create the new task
+  def create = Action {
     Ok(views.html.newtask(taskForm))
   }
-  //def newTask_page = TODO
-
-  //def newTask = TODO
-  def newTask = Action { implicit request =>
+  //Handle the "new task form" submission
+  def save = Action { implicit request =>
 	  taskForm.bindFromRequest.fold(
-	    errors => BadRequest(views.html.index(Task.all(), errors)),
-	    label => {
-	      Task.create(label)
+	    errors => BadRequest(views.html.index(Task.all())), //TODO: CHANGE REDIRECT ERROR
+	    task => {
+	      Task.create(task.label)
 	      Redirect(routes.Application.tasks)
 	    }
 	  )
   }
-  
-  //def deleteTask = TODO
+  //Delete task from bbdd?
   def deleteTask(id: Long) = Action {
     Task.delete(id)
     Redirect(routes.Application.tasks)
   }
-
-  val taskForm = Form(
-    "label" -> nonEmptyText
-  )
-
-
 }
 
   

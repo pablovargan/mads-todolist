@@ -1,4 +1,4 @@
-@(tasks: List[Task], taskForm: Form[String])
+@(tasks: List[Task])
 
 @import helper._
 
@@ -11,12 +11,14 @@
             <li>
                 @task.label
                 
-                @form(routes.Application.deleteTask(task.id)) {
+                @form(routes.Application.deleteTask(task.id.get)) {
                     <input type="submit" value="Delete">
                 }
             </li>
         }
     </ul>
     
-    <h2>Add a new task</h2>
+    <a href="@routes.Application.create">
+        <button>Create a new task</button>
+    </a>
 }
