@@ -15,7 +15,8 @@ object Application extends Controller {
   val taskForm = Form(
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
-      "label" -> nonEmptyText
+      "label" -> nonEmptyText,
+      "finishDate" -> optional(date("yyyy-MM-dd"))
     ) (Task.apply)(Task.unapply)
   )
 
@@ -38,7 +39,7 @@ object Application extends Controller {
 	  taskForm.bindFromRequest.fold(
 	    errors => BadRequest(views.html.index(Task.all())), //TODO: CHANGE REDIRECT ERROR
 	    task => {
-	      Task.create(task.label)
+	      Task.create(task)
 	      Redirect(routes.Application.tasks)
 	    }
 	  )

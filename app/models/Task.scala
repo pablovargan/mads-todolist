@@ -6,15 +6,18 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
-case class Task(id: Pk[Long] = NotAssigned, label: String)
+import java.util.{Date}
+
+case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date])
 
 object Task {
   
   //Parser from a ResultSet
   val task = {
     get[Pk[Long]]("id") ~ 
-    get[String]("label") map {
-      case id~label => Task(id, label)
+    get[String]("label") ~
+    get[Option[Date]]("finishDate") map {
+      case id~label~finishDate => Task(id, label, finishDate)
     }
   }
 
@@ -24,10 +27,17 @@ object Task {
   } 
 
   //Insert a new task
-  def create(label: String) {
+  def create(task: Task) {
     DB.withConnection { implicit c =>
-      SQL("insert into task (label) values ({label})").on(
-        'label -> label
+      SQL(
+        """
+          insert into task(label, finishDate) values (
+            {label}, {finishDate}
+          )
+        """
+      ).on(
+        'label -> task.label,
+        'finishDate -> task.finishDate
       ).executeUpdate()
     }
   }
@@ -54,12 +64,13 @@ object Task {
       SQL(
         """
           update task
-          set label = {label}
+          set label = {label}, finishDate = {finishDate}
           where id = {id}
         """
       ).on(
         'id -> id,
-        'label -> task.label
+        'label -> task.label,
+        'finishDate -> task.finishDate
       ).executeUpdate()
     }
   }

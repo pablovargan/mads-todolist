@@ -5,7 +5,8 @@
 	<h1> Add a new task </h1>
 	@form(routes.Application.save) {
         
-        @inputText(taskForm("label")) 
+        @inputText(taskForm("label"))
+        @inputText(taskForm("finishDate")) 
         
         <input type="submit" value="Create">
      }

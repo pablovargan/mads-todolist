@@ -6,6 +6,7 @@
 	@form(routes.Application.update(id)) {
 
 		@inputText(taskForm("label"))
+		@inputText(taskForm("finishDate"))
 
 		<input type="submit" value="Save">
 		<a href="@routes.Application.index">Cancel</a>
