@@ -6,7 +6,7 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
-import java.util.{Date}
+import java.util.Date
 
 case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date])
 

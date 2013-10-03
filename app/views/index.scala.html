@@ -6,21 +6,31 @@
     
     <h1>@tasks.size task(s)</h1>
     
-    <ul>
+    <table id="task table"
+        border="1">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Finish Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
         @tasks.map { task =>
-            <li>
-                @task.label
-                @task.finishDate
-                
-                @form(routes.Application.delete(task.id.get)) {
-                    <input type="submit" value="Delete">
-                }
-                @form(routes.Application.edit(task.id.get)) {
-                    <input type="submit" value="Edit">
-                }
-            </li>
+            <tbody>    
+                <tr>
+                    <td>@task.label</td>
+                    <td>@task.finishDate.map(_.format("dd MMM yyyy")).getOrElse { <em>-</em> }</td>
+                    <td>@form(routes.Application.delete(task.id.get)) {
+                            <input type="submit" value="Delete">
+                        }
+                        @form(routes.Application.edit(task.id.get)) {
+                            <input type="submit" value="Edit">
+                        }
+                    </td>
+                </tr>
+            </tbody>
         }
-    </ul>
+    </table>
     
     <a href="@routes.Application.create">
         <button>Create a new task</button>
