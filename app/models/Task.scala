@@ -25,7 +25,10 @@ object Task {
   def all(): List[Task] = DB.withConnection { implicit c =>
     SQL("select * from task").as(task *)
   } 
-
+  //Handle list of task with the order propose by user
+  def orderByASC(): List[Task] = DB.withConnection { implicit c =>
+    SQL("select * from task order by finishDate ASC").as(task *)
+  }
   //Insert a new task
   def create(task: Task) {
     DB.withConnection { implicit c =>

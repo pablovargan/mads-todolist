@@ -10,7 +10,6 @@ import anorm._
 import models.Task
 
 object Application extends Controller {
-  
   //Describe the task form
   val taskForm = Form(
     mapping(
@@ -19,6 +18,13 @@ object Application extends Controller {
       "finishDate" -> optional(date("yyyy-MM-dd"))
     ) (Task.apply)(Task.unapply)
   )
+  //Handle from Option[Int], save Some(int)
+  def orderBy(num:Int):Option[Int] = {
+    if(num > 1) Some(1)
+    else None
+  }
+  //Set order with id to order tasks
+  var or:Option[Int] = orderBy(1)
 
   /* ACTIONS */
 
@@ -28,7 +34,10 @@ object Application extends Controller {
   }
   //Display a list of tasks
   def tasks = Action {
-    Ok(views.html.index(Task.all()))
+    or match {
+      case Some(1) => Ok(views.html.index(Task.orderByASC()))
+      case None => Ok(views.html.index(Task.all())) 
+    }
   }
   //Display form to create the new task
   def create = Action {
@@ -66,6 +75,9 @@ object Application extends Controller {
     )
   }
 
+  def order = Action {
+    Ok(views.html.index(Task.orderByASC()))
+  }
 }
 
   
