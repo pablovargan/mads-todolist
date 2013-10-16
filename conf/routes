@@ -7,7 +7,7 @@ GET     /                       controllers.Application.index
 
 #Tasks
 GET     /tasks                  controllers.Application.tasks
-GET 	/taskOrder				controllers.Application.order
+GET 	/taskOrder				controllers.Application.order(id: Int)
 
 #Add task
 GET     /new                	controllers.Application.create

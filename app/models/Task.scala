@@ -22,13 +22,21 @@ object Task {
   }
 
   //Return a list of tasks
-  def all(): List[Task] = DB.withConnection { implicit c =>
+  def all(opt: Option[Int]): List[Task] = {
+    opt match { 
+      case Some(1) => orderByASC()
+      case None => order()
+    }
+  }
+
+  def order(): List[Task] = DB.withConnection { implicit c =>
     SQL("select * from task").as(task *)
-  } 
+  }
   //Handle list of task with the order propose by user
   def orderByASC(): List[Task] = DB.withConnection { implicit c =>
-    SQL("select * from task order by finishDate ASC").as(task *)
+    SQL("select * from task order by finishDate nulls last").as(task *)
   }
+  
   //Insert a new task
   def create(task: Task) {
     DB.withConnection { implicit c =>

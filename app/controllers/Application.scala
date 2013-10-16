@@ -18,13 +18,14 @@ object Application extends Controller {
       "finishDate" -> optional(date("yyyy-MM-dd"))
     ) (Task.apply)(Task.unapply)
   )
-  //Handle from Option[Int], save Some(int)
-  def orderBy(num:Int):Option[Int] = {
-    if(num > 1) Some(1)
+  //Set order with id to order tasks
+  var or: Option[Int] = None
+  var orderBy:Int = 0
+
+  def change(id:Int): Option[Int] = {
+    if(id > 0) Some(1)
     else None
   }
-  //Set order with id to order tasks
-  var or:Option[Int] = orderBy(1)
 
   /* ACTIONS */
 
@@ -32,12 +33,14 @@ object Application extends Controller {
   def index = Action {
     Redirect(routes.Application.tasks)
   }
-  //Display a list of tasks
+  //Handle value of order to comunicate on the view
   def tasks = Action {
-    or match {
-      case Some(1) => Ok(views.html.index(Task.orderByASC()))
-      case None => Ok(views.html.index(Task.all())) 
-    }
+    /*or match {
+      case Some(1) => Ok(views.html.index(Task.all(1),orderBy))
+      case None => Ok(views.html.index(Task.all(0),orderBy))
+    }*/
+    Ok(views.html.index(Task.all(or),orderBy))
+    
   }
   //Display form to create the new task
   def create = Action {
@@ -46,7 +49,7 @@ object Application extends Controller {
   //Handle the "new task form" submission
   def save = Action { implicit request =>
 	  taskForm.bindFromRequest.fold(
-	    errors => BadRequest(views.html.index(Task.all())), //TODO: CHANGE REDIRECT ERROR
+	    errors => BadRequest(views.html.index(Task.all(or),orderBy)), //TODO: CHANGE REDIRECT ERROR
 	    task => {
 	      Task.create(task)
 	      Redirect(routes.Application.tasks)
@@ -75,8 +78,14 @@ object Application extends Controller {
     )
   }
 
-  def order = Action {
-    Ok(views.html.index(Task.orderByASC()))
+  def order(id:Int) = Action {
+    id match {
+      case 1 => orderBy = 0
+      case 0 => orderBy = 1
+    }
+    //I change status of or
+    or = change(id)
+    Redirect(routes.Application.tasks)
   }
 }
 

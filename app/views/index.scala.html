@@ -1,4 +1,4 @@
-@(tasks: List[Task])
+@(tasks: List[Task], currentOrderBy:Int)
 
 @import helper._
 
@@ -35,7 +35,7 @@
     <a href="@routes.Application.create">
         <button>Create a new task</button>
     </a>
-    <a href="@routes.Application.order">
-        <button>Order by finish date</button>
+    <a href="@routes.Application.order(currentOrderBy)">
+        <button>Order</button>
     </a>
 }
