@@ -29,45 +29,41 @@ object Application extends Controller {
 
   /* ACTIONS */
 
-  //Redirect to list of tasks (application home)
+  // Redirect to list of tasks (application home)
   def index = Action {
     Redirect(routes.Application.tasks)
   }
-  //Handle value of order to comunicate on the view
+  // Handle value of order to comunicate on the view
   def tasks = Action {
-    /*or match {
-      case Some(1) => Ok(views.html.index(Task.all(1),orderBy))
-      case None => Ok(views.html.index(Task.all(0),orderBy))
-    }*/
     Ok(views.html.index(Task.all(or),orderBy))
-    
   }
-  //Display form to create the new task
+  // Display form to create the new task
   def create = Action {
     Ok(views.html.newtask(taskForm))
   }
-  //Handle the "new task form" submission
+  // Handle the "new task form" submission
   def save = Action { implicit request =>
 	  taskForm.bindFromRequest.fold(
-	    errors => BadRequest(views.html.index(Task.all(or),orderBy)), //TODO: CHANGE REDIRECT ERROR
+	    //errors => BadRequest(views.html.index(Task.all(or),orderBy)), //TODO: CHANGE REDIRECT ERROR --> DONE! :)
+      errors => BadRequest(views.html.newtask(taskForm)),
 	    task => {
 	      Task.create(task)
 	      Redirect(routes.Application.tasks)
 	    }
 	  )
   }
-  //Delete task from bbdd?
+  // Delete task from bbdd?
   def delete(id: Long) = Action {
     Task.delete(id)
     Redirect(routes.Application.tasks)
   }
-  //Edit task and rediret to Taks(index)
+  // Edit task and rediret to Taks(index)
   def edit(id: Long) = Action {
     Task.findById(id).map { task =>
       Ok(views.html.edittask(id, taskForm.fill(task)))
     }.getOrElse(NotFound)
   }
-  //Update task from bbdd?
+  // Update task from bbdd?
   def update(id: Long) = Action { implicit request =>
     taskForm.bindFromRequest.fold(
       errors => BadRequest(views.html.edittask(id, errors)),
@@ -83,7 +79,7 @@ object Application extends Controller {
       case 1 => orderBy = 0
       case 0 => orderBy = 1
     }
-    //I change status of or
+    // Change status of 'or'
     or = change(id)
     Redirect(routes.Application.tasks)
   }

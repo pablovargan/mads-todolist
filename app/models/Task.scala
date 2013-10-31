@@ -25,7 +25,7 @@ object Task {
   def all(opt: Option[Int]): List[Task] = {
     opt match { 
       case Some(1) => orderByASC()
-      case None => order()
+      case _ => order()
     }
   }
 
