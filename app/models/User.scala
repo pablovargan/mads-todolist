@@ -35,6 +35,21 @@ object User {
 		}
 	}
 
+	// Retrieve a User
+	def authenticate(email: String, password:String): Option[User] = {
+		DB.withConnection { implicit connection =>
+			SQL(
+				"""
+					select * from owner where
+					email = {email} and password = {password}
+				"""
+				).on(
+					'email -> email,
+					'password -> password
+				).as(User.login.singleOpt)
+		}
+	}
+
 	/* ADITIONAL METHOD */
 
 	// List of Users

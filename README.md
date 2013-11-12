@@ -28,6 +28,9 @@
  	- Añadido al controlador los métodos de crear usuario y listarlos y configurado el enrutado para poder realizar las peticiones GET y POST.
  	- Crea un usuario (email, password) y te lleva a la lista de usuarios pero aún no entra en la sesión (TODO)
 
+- 3:08 PM
+	- Copiado los fragmentos de código del enunciado y realizadas las pruebas de login e implementado el logout.
+
 
 
 

@@ -5,9 +5,7 @@
 @main("Todo list") {
     
     <h1>@tasks.size task(s)</h1>
-    
-    <table id="task table"
-        border="1">
+    <table id="task table" border="1">
         <thead>
             <tr>
                 <th>Task</th>
@@ -37,5 +35,8 @@
     </a>
     <a href="@routes.Application.order(currentOrderBy)">
         <button>Order</button>
+    </a>
+    <a href="@routes.Application.logout">
+        <button>Log out</button>
     </a>
 }
