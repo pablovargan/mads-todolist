@@ -21,6 +21,7 @@ object Task {
     }
   }
 
+
   //Return a list of tasks
   def all(opt: Option[Int]): List[Task] = {
     opt match { 

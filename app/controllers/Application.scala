@@ -8,8 +8,12 @@ import play.api.data.Forms._
 
 import anorm._
 import models.Task
+import models.User
 
 object Application extends Controller {
+
+  /* FORM'S */
+
   //Describe the task form
   val taskForm = Form(
     mapping(
@@ -18,6 +22,14 @@ object Application extends Controller {
       "finishDate" -> optional(date("yyyy-MM-dd"))
     ) (Task.apply)(Task.unapply)
   )
+
+  val userForm = Form(
+    mapping(
+      "email" -> nonEmptyText,
+      "password" -> nonEmptyText
+    ) (User.apply)(User.unapply)
+  )
+
   //Set order with id to order tasks
   var or: Option[Int] = None
   var orderBy:Int = 0
@@ -29,6 +41,7 @@ object Application extends Controller {
 
   /* ACTIONS */
 
+  /* TASK */
   // Redirect to list of tasks (application home)
   def index = Action {
     Redirect(routes.Application.tasks)
@@ -82,6 +95,29 @@ object Application extends Controller {
     // Change status of 'or'
     or = change(id)
     Redirect(routes.Application.tasks)
+  }
+
+  /* USER */
+
+  // Display form to create a new user
+  def createUser = Action {
+    Ok(views.html.newuser(userForm))
+  }
+
+  // Display a list of users
+  def listUsers = Action { implicit request =>
+    Ok(views.html.users(User.userList()))
+  }
+
+  // Handle the "new user form" submission
+  def saveUser = Action { implicit request =>
+    userForm.bindFromRequest.fold(
+      errors => BadRequest(views.html.newuser(userForm)),
+      user => {
+        User.create(user)
+        Redirect(routes.Application.listUsers)
+      }
+    )
   }
 }
 

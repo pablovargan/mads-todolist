@@ -5,6 +5,13 @@
 # Home page
 GET     /                       controllers.Application.index
 
+# Create User
+GET		/create					controllers.Application.createUser
+POST	/saveUser				controllers.Application.saveUser
+
+# List of users
+GET		/listUsers				controllers.Application.listUsers
+
 #Tasks
 GET     /tasks                  controllers.Application.tasks
 GET 	/taskOrder				controllers.Application.order(id: Int)

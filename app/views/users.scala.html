@@ -1,0 +1,21 @@
+@(users: List[User])
+
+@import helper._
+
+@main("Users") {
+	<h1> List of users </h1>
+	<table id="userTable" border="1">
+		<thead>
+			<tr> Email </tr>
+			<tr> Password </tr>
+		</thead>
+		@users.map { user =>
+			<tbody>
+				<tr>
+					<td> @user.email </td>
+					<td> @user.password </td>
+				</tr>
+			</tbody>
+		}
+	</table>
+}
