@@ -4,12 +4,15 @@
 
 @main("Login") {
 	<h1> LOGIN </h1>
-	@form(routes.Application.authenticate) {
+	@form(routes.Application.doLogin) {
 
 		@inputText(userForm("email"))
 		@inputPassword(userForm("password"))
 
 		<input type="submit" value="Login">
 	}
+	<a href="@routes.Application.createUser">
+        <button>Create new user</button>
+    </a>
 }
 	

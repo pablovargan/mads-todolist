@@ -35,6 +35,16 @@ object User {
 		}
 	}
 
+	// Find a user by email
+	def findByEmail(email: String): Option[User] = {
+	    DB.withConnection { implicit connection =>
+	      SQL("select * from owner where email = {email}").on(
+	        'email -> email
+	      ).as(User.login.singleOpt)
+	    }
+  	}
+
+
 	// Retrieve a User
 	def authenticate(email: String, password:String): Option[User] = {
 		DB.withConnection { implicit connection =>

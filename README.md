@@ -31,6 +31,10 @@
 - 3:08 PM
 	- Copiado los fragmentos de código del enunciado y realizadas las pruebas de login e implementado el logout.
 
+13/11/2013
+
+- 12:21 Login funcional y entra en sesión con seguridad de no insertar el mismo email para crear un usuario. 
+
 
 
 

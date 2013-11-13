@@ -7,7 +7,7 @@ GET     /                       controllers.Application.index
 
 # Login
 GET		/login 					controllers.Application.login
-POST	/login					controllers.Application.authenticate
+POST	/login					controllers.Application.doLogin
 GET     /logout                 controllers.Application.logout
 
 # Create User
@@ -18,15 +18,15 @@ POST	/saveUser				controllers.Application.saveUser
 GET		/listUsers				controllers.Application.listUsers
 
 #Tasks
-GET     /tasks                  controllers.Application.tasks
-GET 	/taskOrder				controllers.Application.order(id: Int)
+GET     /tasks                  controllers.Application.tasks(userEmail: String)
+GET 	/taskOrder				controllers.Application.order(id: Int, userEmail: String)
 
 #Add task
 GET     /new                	controllers.Application.create
 POST    /save                   controllers.Application.save
 
 #Delete task
-POST    /tasks/:id/delete       controllers.Application.delete(id: Long)
+POST    /tasks/:id/delete       controllers.Application.delete(id: Long, userEmail: String)
 
 #Edit task
 GET		/tasks/:id 				controllers.Application.edit(id:Long)

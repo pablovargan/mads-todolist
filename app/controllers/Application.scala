@@ -19,7 +19,8 @@ object Application extends Controller {
     mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "label" -> nonEmptyText,
-      "finishDate" -> optional(date("yyyy-MM-dd"))
+      "finishDate" -> optional(date("yyyy-MM-dd")),
+      "userEmail" -> nonEmptyText
     ) (Task.apply)(Task.unapply)
   )
 
@@ -43,12 +44,24 @@ object Application extends Controller {
 
   /* TASK */
   // Redirect to list of tasks (application home)
+  /*
   def index = Action {
     Redirect(routes.Application.tasks)
   }
+  */
+
+  def index = GetLoggedUser { user => implicit request =>
+    Redirect(routes.Application.tasks(user))
+  }
+
   // Handle value of order to comunicate on the view
+  /*
   def tasks = Action {
     Ok(views.html.index(Task.all(or),orderBy))
+  }*/
+
+  def tasks(userEmail: String) = Action {
+    Ok(views.html.index(Task.all(or), orderBy, userEmail))
   }
   // Display form to create the new task
   def create = Action {
@@ -61,14 +74,14 @@ object Application extends Controller {
       errors => BadRequest(views.html.newtask(taskForm)),
 	    task => {
 	      Task.create(task)
-	      Redirect(routes.Application.tasks)
+	      Redirect(routes.Application.tasks(task.userEmail))
 	    }
 	  )
   }
   // Delete task from bbdd?
-  def delete(id: Long) = Action {
+  def delete(id: Long, userEmail: String) = Action {
     Task.delete(id)
-    Redirect(routes.Application.tasks)
+    Redirect(routes.Application.tasks(userEmail))
   }
   // Edit task and rediret to Taks(index)
   def edit(id: Long) = Action {
@@ -82,19 +95,19 @@ object Application extends Controller {
       errors => BadRequest(views.html.edittask(id, errors)),
       task => {
         Task.update(id, task)
-        Redirect(routes.Application.tasks)
+        Redirect(routes.Application.tasks(task.userEmail))
       }
     )
   }
 
-  def order(id:Int) = Action {
+  def order(id:Int, userEmail:String) = Action {
     id match {
       case 1 => orderBy = 0
       case 0 => orderBy = 1
     }
     // Change status of 'or'
     or = change(id)
-    Redirect(routes.Application.tasks)
+    Redirect(routes.Application.tasks(userEmail))
   }
 
   /* USER */
@@ -114,8 +127,14 @@ object Application extends Controller {
     userForm.bindFromRequest.fold(
       errors => BadRequest(views.html.newuser(userForm)),
       user => {
-        User.create(user)
-        Redirect(routes.Application.listUsers)
+        // Si ya existe el email no se puede crear el usuario ya que es PK
+        User.findByEmail(user.email) match {
+          case Some(usrfnd) => { Redirect(routes.Application.login) }
+          case None => {
+              User.create(user)
+              Redirect(routes.Application.index).withSession("email" -> user.email)
+          }
+        }
       }
     )
   }
@@ -126,10 +145,22 @@ object Application extends Controller {
     Ok(views.html.loginUser(userForm))
   }
 
-  def authenticate = Action { implicit request =>
+  // Authenticate
+  def doLogin = Action { implicit request =>
     userForm.bindFromRequest.fold(
       errors => BadRequest(views.html.loginUser(errors)),
-      user => Redirect(routes.Application.index).withSession("email" -> user.email)
+      user => {
+        User.findByEmail(user.email) match {
+          case Some(usrfnd) => if(usrfnd.password == user.password) {
+                              Redirect(routes.Application.index).withSession("email" -> user.email)
+                            }
+                            else {
+                              //Forbidden
+                              Redirect(routes.Application.login)
+                            }
+          case None => Redirect(routes.Application.login)
+        }
+      } 
     )
   }
 

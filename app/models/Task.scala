@@ -8,7 +8,7 @@ import anorm.SqlParser._
 
 import java.util.Date
 
-case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date])
+case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date], userEmail: String)
 
 object Task {
   
@@ -16,8 +16,9 @@ object Task {
   val task = {
     get[Pk[Long]]("id") ~ 
     get[String]("label") ~
-    get[Option[Date]]("finishDate") map {
-      case id~label~finishDate => Task(id, label, finishDate)
+    get[Option[Date]]("finishDate") ~ 
+    get[String]("userEmail") map {
+      case id~label~finishDate~userEmail => Task(id, label, finishDate,userEmail)
     }
   }
 
