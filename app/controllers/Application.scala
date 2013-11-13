@@ -23,7 +23,7 @@ object Application extends Controller {
       "usuario" -> nonEmptyText
     ) (Task.apply)(Task.unapply)
   )
-
+  //Describe the task form
   val userForm = Form(
     mapping(
       "email" -> nonEmptyText,
@@ -51,7 +51,7 @@ object Application extends Controller {
     Ok(views.html.index(Task.all(or, user), orderBy, user))
   }
   // Display form to create the new task
-  // Compruebo que estes logueado para crear una tarea
+  // Check user to create a task (Condition)
   def create = GetLoggedUser { user => implicit request =>
     Ok(views.html.newtask(taskForm, user))
   }
