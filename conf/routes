@@ -18,15 +18,15 @@ POST	/saveUser				controllers.Application.saveUser
 GET		/listUsers				controllers.Application.listUsers
 
 #Tasks
-GET     /tasks                  controllers.Application.tasks(userEmail: String)
-GET 	/taskOrder				controllers.Application.order(id: Int, userEmail: String)
+GET     /tasks                  controllers.Application.tasks
+GET 	/taskOrder				controllers.Application.order(id: Int)
 
 #Add task
 GET     /new                	controllers.Application.create
 POST    /save                   controllers.Application.save
 
 #Delete task
-POST    /tasks/:id/delete       controllers.Application.delete(id: Long, userEmail: String)
+POST    /tasks/:id/delete       controllers.Application.delete(id: Long)
 
 #Edit task
 GET		/tasks/:id 				controllers.Application.edit(id:Long)

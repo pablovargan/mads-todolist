@@ -8,7 +8,7 @@ import anorm.SqlParser._
 
 import java.util.Date
 
-case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date], userEmail: String)
+case class Task(id: Pk[Long] = NotAssigned, label: String, finishDate: Option[Date], usuario: String)
 
 object Task {
   
@@ -17,25 +17,25 @@ object Task {
     get[Pk[Long]]("id") ~ 
     get[String]("label") ~
     get[Option[Date]]("finishDate") ~ 
-    get[String]("userEmail") map {
-      case id~label~finishDate~userEmail => Task(id, label, finishDate,userEmail)
+    get[String]("usuario") map {
+      case id~label~finishDate~usuario => Task(id, label, finishDate,usuario)
     }
   }
 
   //Return a list of tasks
-  def all(opt: Option[Int]): List[Task] = {
+  def all(opt: Option[Int], usuario:String): List[Task] = {
     opt match { 
-      case Some(1) => orderByASC()
-      case _ => order()
+      case Some(1) => orderByASC(usuario)
+      case _ => order(usuario)
     }
   }
 
-  def order(): List[Task] = DB.withConnection { implicit c =>
-    SQL("select * from task").as(task *)
+  def order(usuario:String): List[Task] = DB.withConnection { implicit c =>
+    SQL("select * from task where task.usuario = usuario").on('usuario -> usuario).as(task *)
   }
   //Handle list of task with the order propose by user
-  def orderByASC(): List[Task] = DB.withConnection { implicit c =>
-    SQL("select * from task order by finishDate nulls last").as(task *)
+  def orderByASC(usuario:String): List[Task] = DB.withConnection { implicit c =>
+    SQL("select * from task where task.usuario = usuario order by finishDate nulls last").on('usuario -> usuario).as(task *)
   }
   
   //Insert a new task
@@ -43,13 +43,14 @@ object Task {
     DB.withConnection { implicit c =>
       SQL(
         """
-          insert into task(label, finishDate) values (
-            {label}, {finishDate}
+          insert into task(label, finishDate, usuario) values (
+            {label}, {finishDate}, {usuario}
           )
         """
       ).on(
         'label -> task.label,
-        'finishDate -> task.finishDate
+        'finishDate -> task.finishDate,
+        'usuario -> task.usuario
       ).executeUpdate()
     }
   }
@@ -71,19 +72,38 @@ object Task {
   }
 
   //Update a task
-  def update(id: Long, task: Task) = {
+  def update(id: Long, task: Task, usuario:String) = {
     DB.withConnection { implicit connection =>
       SQL(
         """
           update task
           set label = {label}, finishDate = {finishDate}
-          where id = {id}
+          where id = {id} and usuario = {usuario}
         """
       ).on(
         'id -> id,
         'label -> task.label,
-        'finishDate -> task.finishDate
+        'finishDate -> task.finishDate,
+        'usuario -> usuario
       ).executeUpdate()
+    }
+  }
+
+  /**
+   * Check if a user is the owner of this task
+   */
+  def isOwnerOf(id: Long, user: String): Boolean = {
+    DB.withConnection { implicit connection =>
+      SQL(
+        """
+          select count(task.id) = 1 from task
+          where task.usuario = {email} and task.id = {id}
+
+        """
+      ).on(
+        'id -> id,
+        'email -> user
+      ).as(scalar[Boolean].single)
     }
   }
 

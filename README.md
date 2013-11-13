@@ -33,7 +33,15 @@
 
 13/11/2013
 
-- 12:21 Login funcional y entra en sesión con seguridad de no insertar el mismo email para crear un usuario. 
+- 12:21 AM Login funcional y entra en sesión con seguridad de no insertar el mismo email para crear un usuario. 
+
+- 3:25 PM Solo se puede crear tareas si estas logueado
+TODO: SEGURIDAD!
+
+- 4:34 PM Una vez logueado se ha modificado la entidad de negocio de la tarea para mostrar con sus ordenes aquellos que corresponden al usuario en concreto para mostrar sus tareas. 
+- 5:47 PM Implementada la seguridad para editar y eliminar las tareas con sus cambios en la base de dato para acceder a ellas. Para las peticiones GET he comprobado unicamente que se esté logueado.
+
+- 5:50 PM Finalizada la práctica y TODO: Documentación
 
 
 

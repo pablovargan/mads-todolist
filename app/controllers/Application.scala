@@ -20,7 +20,7 @@ object Application extends Controller {
       "id" -> ignored(NotAssigned:Pk[Long]),
       "label" -> nonEmptyText,
       "finishDate" -> optional(date("yyyy-MM-dd")),
-      "userEmail" -> nonEmptyText
+      "usuario" -> nonEmptyText
     ) (Task.apply)(Task.unapply)
   )
 
@@ -43,71 +43,58 @@ object Application extends Controller {
   /* ACTIONS */
 
   /* TASK */
-  // Redirect to list of tasks (application home)
-  /*
-  def index = Action {
+  def index = GetLoggedUser { user => implicit request =>
     Redirect(routes.Application.tasks)
   }
-  */
-
-  def index = GetLoggedUser { user => implicit request =>
-    Redirect(routes.Application.tasks(user))
-  }
-
   // Handle value of order to comunicate on the view
-  /*
-  def tasks = Action {
-    Ok(views.html.index(Task.all(or),orderBy))
-  }*/
-
-  def tasks(userEmail: String) = Action {
-    Ok(views.html.index(Task.all(or), orderBy, userEmail))
+  def tasks = GetLoggedUser { user => implicit request =>
+    Ok(views.html.index(Task.all(or, user), orderBy, user))
   }
   // Display form to create the new task
-  def create = Action {
-    Ok(views.html.newtask(taskForm))
+  // Compruebo que estes logueado para crear una tarea
+  def create = GetLoggedUser { user => implicit request =>
+    Ok(views.html.newtask(taskForm, user))
   }
   // Handle the "new task form" submission
-  def save = Action { implicit request =>
+  def save() = Action { implicit request =>
 	  taskForm.bindFromRequest.fold(
-	    //errors => BadRequest(views.html.index(Task.all(or),orderBy)), //TODO: CHANGE REDIRECT ERROR --> DONE! :)
-      errors => BadRequest(views.html.newtask(taskForm)),
+      errors => BadRequest(views.html.newtask(taskForm,"ERROR")),
 	    task => {
 	      Task.create(task)
-	      Redirect(routes.Application.tasks(task.userEmail))
+	      Redirect(routes.Application.tasks)
 	    }
 	  )
   }
   // Delete task from bbdd?
-  def delete(id: Long, userEmail: String) = Action {
+  def delete(id: Long) = IsOwnerOf(id) { user => implicit request =>
     Task.delete(id)
-    Redirect(routes.Application.tasks(userEmail))
+    Redirect(routes.Application.tasks)
   }
+  
   // Edit task and rediret to Taks(index)
-  def edit(id: Long) = Action {
+  def edit(id: Long) = GetLoggedUser { user => implicit request =>
     Task.findById(id).map { task =>
-      Ok(views.html.edittask(id, taskForm.fill(task)))
+      Ok(views.html.edittask(id, taskForm.fill(task), user))
     }.getOrElse(NotFound)
   }
   // Update task from bbdd?
-  def update(id: Long) = Action { implicit request =>
+  def update(id: Long) = IsOwnerOf(id) { user => implicit request =>
     taskForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.edittask(id, errors)),
+      errors => BadRequest(views.html.edittask(id,errors,user)),
       task => {
-        Task.update(id, task)
-        Redirect(routes.Application.tasks(task.userEmail))
-      }
-    )
+        Task.update(id, task, user)
+        Redirect(routes.Application.tasks)
+      })
   }
 
-  def order(id:Int, userEmail:String) = Action {
+  def order(id:Int) = Action {
     id match {
       case 1 => orderBy = 0
       case 0 => orderBy = 1
     }
     // Change status of 'or'
     or = change(id)
-    Redirect(routes.Application.tasks(userEmail))
+    Redirect(routes.Application.tasks)
   }
 
   /* USER */
@@ -184,8 +171,20 @@ object Application extends Controller {
   * Check authenticated user
   */
   def GetLoggedUser (f: => String => Request[AnyContent] => Result) = 
-     Security.Authenticated(username, onUnauthorized) { 
-        user => Action(request => f(user)(request))
-  }
+    Security.Authenticated(username, onUnauthorized) { 
+      user => Action(request => f(user)(request))
+    }
+
+  /**
+  * Check if the connected user is a owner of the task
+  */
+  def IsOwnerOf(task: Long)(f: => String => Request[AnyContent] => Result) = 
+    GetLoggedUser { user => request =>
+      if(Task.isOwnerOf(task, user)) {
+        f(user)(request)
+      } else {
+        Results.Forbidden("PROHIBIDO - NO TIENES ACCESO")
+      }
+    } 
 }
   

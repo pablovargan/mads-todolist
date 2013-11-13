@@ -1,12 +1,13 @@
-@(taskForm: Form[Task])
+@(taskForm: Form[Task], userEmail: String)
 @import helper._
 
 @main("Add Task") {
-	<h1> Add a new task </h1>
+	<h1> Add a new task, @userEmail </h1>
 	@form(routes.Application.save) {
         
         @inputText(taskForm("label"))
-        @inputText(taskForm("finishDate")) 
+        @inputText(taskForm("finishDate"))
+        <input type="hidden" name="usuario" value="@userEmail"> 
         <input type="submit" value="Create">
      }
 }

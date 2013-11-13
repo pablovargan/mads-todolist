@@ -1,10 +1,10 @@
-@(tasks: List[Task], currentOrderBy:Int, userEmail:String)
+@(tasks: List[Task], currentOrderBy:Int, usuario:String)
 
 @import helper._
 
 @main("Todo list") {
     
-    <h1>@userEmail</h1>
+    <h1>@usuario</h1>
     <h1>@tasks.size task(s)</h1>
     <table id="task table" border="1">
         <thead>
@@ -19,7 +19,7 @@
                 <tr>
                     <td>@task.label</td>
                     <td>@task.finishDate.map(_.format("dd MMM yyyy")).getOrElse { <em>-</em> }</td>
-                    <td>@form(routes.Application.delete(task.id.get, userEmail)) {
+                    <td>@form(routes.Application.delete(task.id.get)) {
                             <input type="submit" value="Delete">
                         }
                         @form(routes.Application.edit(task.id.get)) {
@@ -34,7 +34,7 @@
     <a href="@routes.Application.create">
         <button>Create a new task</button>
     </a>
-    <a href="@routes.Application.order(currentOrderBy, userEmail)">
+    <a href="@routes.Application.order(currentOrderBy)">
         <button>Order</button>
     </a>
     <a href="@routes.Application.logout">
