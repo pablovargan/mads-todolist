@@ -1,7 +1,7 @@
 
 # Práctica 3: Múltiples usuarios #
 
-Proyecto desplegado en heroku: //TODO: mirar log de heroku con errores
+Proyecto desplegado en heroku: http://mighty-spire-9116.herokuapp.com/
 
 
 El objetivo de esta práctica ha sido ampliar la aplicación para que permita gestionar las tareas con diferentes usuarios por medio de una autentificación para restringir el uso a solo los usuarios.
@@ -47,6 +47,9 @@ Ahora he modificado igual que en los métodos de login y registro en el controla
 En el paso anterior tan solo comprobabamos si estábamos logueados como usuarios y por lo tanto, estando logueados podríamos ver las tareas de los demás usuarios. Por lo tanto en este paso he añadido la función dada en el enunciado en la que desde el controlador haciendo uso de el parámetro by-name desde el cual con el usuario y haciendo la petición nos devuelve el resultado para poder ya entrar en la lógica y acceder a editar y borrar nuestra tarea. Esto es, desde el parámetro isOwnerOf primeramente comprueba si estamos logueados como usuario, comprueba que esa tarea pertenece a nuestro usuario y el resultado es el acceso otra vez a la lógica de negocio para editar/borrar la tarea.
 
 Con esto nos permite que si ponemos la URL en el navegador se haga esta comprobación y así añadir una seguridad para nuestros usuarios.
+
+###Conclusión###
+Técnicamente me ha llamado la atención el uso del parámetro by-name y del como guardar la coockie de la sesión de usuario en el navegador, ya que desconocía como implementarlo y su recuperación desde el método GetLoggedUsser.
 
 ###LOG DE LA PRÁCTICA###
 31/10/2013 - Arreglados los errores y modificados los métodos recomendados por el profesor.
