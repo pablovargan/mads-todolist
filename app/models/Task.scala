@@ -18,7 +18,7 @@ object Task {
     get[String]("label") ~
     get[Option[Date]]("finishDate") ~ 
     get[String]("usuario") map {
-      case id~label~finishDate~usuario => Task(id, label, finishDate,usuario)
+      case id~label~finishDate~usuario => Task(id, label, finishDate, usuario)
     }
   }
 
@@ -31,11 +31,11 @@ object Task {
   }
 
   def order(usuario:String): List[Task] = DB.withConnection { implicit c =>
-    SQL("select * from task where task.usuario = usuario").on('usuario -> usuario).as(task *)
+    SQL("select * from task where task.usuario = {usuario}").on('usuario -> usuario).as(task *)
   }
   //Handle list of task with the order propose by user
   def orderByASC(usuario:String): List[Task] = DB.withConnection { implicit c =>
-    SQL("select * from task where task.usuario = usuario order by finishDate nulls last").on('usuario -> usuario).as(task *)
+    SQL("select * from task where task.usuario = {usuario} order by finishDate nulls last").on('usuario -> usuario).as(task *)
   }
   
   //Insert a new task
