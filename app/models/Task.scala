@@ -64,7 +64,7 @@ object Task {
     }
   }
 
-  //Retrieve a computer from the id
+  //Retrieve a task from the id
   def findById(id: Long): Option[Task] = {
     DB.withConnection { implicit connection =>
       SQL("select * from task where id = {id}").on('id -> id).as(Task.task.singleOpt)

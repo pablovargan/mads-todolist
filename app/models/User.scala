@@ -56,7 +56,7 @@ object User {
 				).on(
 					'email -> email,
 					'password -> password
-				).as(User.login.singleOpt)
+			).as(User.login.singleOpt)
 		}
 	}
 

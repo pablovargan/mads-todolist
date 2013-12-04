@@ -19,8 +19,8 @@ insert into task (label,finishDate,usuario) values ('Jugar a Basket','2006-08-07
 insert into task (label,finishDate,usuario) values ('Jugar a Beisbol','1994-03-01', 'andrea@ua.es');
 insert into task (label,finishDate,usuario) values ('Comprar papel','1991-01-01', 'andrea@ua.es');
 insert into task (label,finishDate,usuario) values ('Ir al museo','1990-01-01', 'andrea@ua.es');
-insert into task (label,finishDate,usuario) values ('Jugar a rugby','1982-08-01', 'cristina@ua.es');
 insert into task (label,finishDate,usuario) values ('Comprar aceite','1985-01-01', 'cristina@ua.es');
+insert into task (label,finishDate,usuario) values ('Jugar a rugby','1982-08-01', 'cristina@ua.es');
 insert into task (label,finishDate,usuario) values ('Ir al teato','1989-08-01', 'cristina@ua.es');
 insert into task (label,finishDate,usuario) values ('Ir al aeropuerto','2000-03-24', 'cristina@ua.es');
 
