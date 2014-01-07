@@ -17,7 +17,7 @@ VARELA GANDIA, PABLO
 
 ### Calificación
 
-Falta un poco de documentación y mejorar algo los tests del modelo
+Falta un poco de documentación y mejorar algo los tests del modelo. Buen trabajo todo lo demás.
 
 Calificación: **0,45**
 
