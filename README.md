@@ -1,3 +1,30 @@
+## Corrección de la práctica
+
+VARELA GANDIA, PABLO
+
+[Bitbucket](https://bitbucket.org/pablovarela/mads-todolist-4)
+
+### Documentación
+
+- Algo escasa
+
+### Código e implementación
+
+- Pocos commits
+- Bien los tests de los controladores
+- Algo escasos los tests del modelo 
+- Los tests de ordenación no prueban realmente que las tareas están ordenadas, faltaría un bucle para asegurarlo
+
+### Calificación
+
+Falta un poco de documentación y mejorar algo los tests del modelo
+
+Calificación: **0,45**
+
+7 de enero de 2014  
+Domingo Gallardo
+
+------
 
 # Práctica 4: Pruebas en Play Framework #
 
